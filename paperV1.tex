@@ -9,6 +9,7 @@
 %——————————–其他宏包——————————–
 \usepackage{amsmath,amsthm,amsfonts,amssymb,bm} % 数学宏包
 \usepackage{graphicx,psfrag}                    % 图形宏包
+%\usepackage{graphicx}                    % 图形宏包
 \usepackage{makeidx}                            % 建立索引宏包
 \usepackage{listings}                           % 源代码宏包
 
@@ -126,7 +127,7 @@
 
 在有限的计算资源下，利用并行计算是提高算法执行效率的最直接的方法。在该项目下，对同一组手机屏幕的一次检测中需要拍摄多张图片，也就意味着要在短时间内对多张图片执行相同的检测算法，在这个地方可以利用多核CPU的多线程并发，对每张图片分配一个线程执行算法。
 
-如果深入到处理器的计算性能，在大规模并行计算领域，GPU（图像处理器）和CPU（中央处理器）相比，展现了更强大的浮点运算能力。GPU的可编程性在未开始发展时，开发人员要借助复杂的计算机图形学API来对GPU进行编程，这对非专业人员造成极大的困难\cite{lv}。而近年来，GPU在计算性能不断提高的同时，它的可编程性也在不断提高，意味着GPU可以在通用计算领域得到更广泛的应用；像这一类的GPU被称为通用GPU，即GPGPU（General Purpose GPU）\cite{wang}。目前应用较广泛的GPGPU 平台主要有CUDA（Compute Unified Device Architecture，统一计算设备架构）、OpenCL（Open Graphics Library，开放计算语言）。CUDA 是显卡厂商NVIDIA推出的、基于他们公司生产的GPU开发出来的，使用C语言来设计需要的程序，对所进行的计算进行分配和管理\cite{lv}。
+如果深入到处理器的计算性能，在大规模并行计算领域，GPU（Graphics Processing Unit，图像处理器）和CPU（Central Processing Unit，中央处理器）相比，展现了更强大的浮点运算能力。GPU的可编程性在未开始发展时，开发人员要借助复杂的计算机图形学API来对GPU进行编程，这对非专业人员造成极大的困难\cite{lv}。而近年来，GPU在计算性能不断提高的同时，它的可编程性也在不断提高，意味着GPU可以在通用计算领域得到更广泛的应用；像这一类的GPU被称为通用GPU，即GPGPU（General Purpose GPU）\cite{wang}。目前应用较广泛的GPGPU 平台主要有CUDA（Compute Unified Device Architecture，统一计算设备架构）、OpenCL（Open Graphics Library，开放计算语言）。CUDA 是显卡厂商NVIDIA推出的、基于他们公司生产的GPU开发出来的，使用C语言来设计需要的程序，对所进行的计算进行分配和管理\cite{lv}。
 
 借助CUDA的架构来对算法进行移植是目前常用的解决性能问题的方法。问题在于，对现有图像处理算法进行移植和优化仍然需要比较强的专业和理论基础，如果只是针对特定算法倒是可行，但是要用上述方法对该项目的检测算法进行移植，涉及到复杂的处理流程，移植算法需要很长的学习和研发周期。
 考虑到易用性和友好程度，这里着重关注OpenCV（Open Source Computer Vision Library）的GPU模块；这个模块最早在NVIDIA公司支持下进行开发，并于2011年春正式发行\cite{wang}。目前为止也更新了大量由CUDA代码编写的图形处理算法，这也就意味着开发人员可以使用这些通用的算法API来利用GPU进行计算，免去了繁杂的算法设计和优化。由于OpenCV的开源特性，专家和爱好者可以共同维护和开发OpenCV的GPU模块，并不断完善，在图形处理方面有着良好的发展前景。
@@ -139,15 +140,31 @@ blank
 blank
 
 
-\section{毕设需求和整体解决方案}
-blank
-\subsection{blank}
+\section{项目需求和整体解决方案}
+\subsection{项目概况}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{img/frame.jpg}
+\caption{手机屏幕缺陷检测整体流程}
+\end{figure}
+
+\subsection{多线程加速设计方案}
+\subsection{GPU通用计算的应用}
 blank
 \subsubsection{blank}
 blank
 
-\section{关键功能的设计}
-\section{实现和测试}
+\section{GPU图像检测算法的实现}
+\section{并行化设计的整体实现与测试}
+\subsection{OpenCV和CUDA环境搭建}
+\subsubsection{软硬件环境}
+\subsubsection{Cmake重新编译OpenCV}
+\subsubsection{Visual Studio 2013下对项目的配置方法}
+\subsection{多线程优化的性能测试}
+\subsection{在GPU下的图像检测算法性能测试}
+\subsection{多线程条件下GPU函数的执行情况}
+
 \section{总结与展望}
 \subsection{论文工作总结}
 \subsection{下一步研究内容}

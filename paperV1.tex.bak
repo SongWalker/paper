@@ -139,8 +139,8 @@ blank
 blank
 
 
-\section{毕设需求和整体解决方案}
-blank
+\section{项目需求和整体解决方案}
+\subsection{项目概况}
 \subsection{blank}
 blank
 \subsubsection{blank}
@@ -161,6 +161,8 @@ blank
 \bibitem{wang}王锋,杜云飞,陈娟. GPGPU性能模型研究[J].计算机工程与科学,2013,35(12):1-7.
 \bibitem{opencv-url}OpenCV官网CUDA主页面[EB/OL].http://opencv.org/platforms/cuda.html.
 \bibitem{cppref-url}标准C++库参考文档[EB/OL].http://www.cplusplus.com/reference.
+\bibitem{CUDA-gpu}Shane Cook.CUDA Programming\_A Developer's Guide to Parallel Computing with GPUs[EB/OL].http://www.nvidia.com
+\bibitem{CUDA-guide}CUDA\_C\_Programming\_Guide[EB/OL].http://www.nvidia.com
 \end{thebibliography}
 
 \end{CJK*}     % 结束中文环境
