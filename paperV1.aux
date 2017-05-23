@@ -9,26 +9,50 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2}研究现状}{4}}
 \citation{wang}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.3}论文主要内容}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}论文组织框架}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}论文组织框架}{5}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}项目需求和整体解决方案}{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}项目概况}{6}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 手机屏幕缺陷检测整体流程}}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}多线程加速设计方案}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}GPU通用计算的应用}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}blank}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}GPU图像检测算法的实现}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}并行化设计的整体实现与测试}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}OpenCV和CUDA环境搭建}{7}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}软硬件环境}{7}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2}Cmake重新编译OpenCV}{7}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.3}Visual Studio 2013下对项目的配置方法}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}多线程优化的性能测试}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}在GPU下的图像检测算法性能测试}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}多线程条件下GPU函数的执行情况}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}总结与展望}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}论文工作总结}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}下一步研究内容}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}本章小结}{7}}
+\newlabel{frame}{{1}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.1}读取算法参数}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.2}图像采集和输入}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 自发光条件下拍摄的图片}}{7}}
+\newlabel{self}{{2}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.3}图像检测}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 外光源条件下拍摄的图片}}{8}}
+\newlabel{ext}{{3}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 分离后的单张图像}}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 有效区域的掩模版}}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 图像检测结果}}{9}}
+\newlabel{result}{{6}{9}}
+\citation{wang}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}多线程加速设计方案}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}图像处理过程中的线程分配}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}OpenMP的应用}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}GPU通用计算的应用}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}CUDA简介}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}在OpenCV中调用GPU的方法}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}本章小结}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}GPU图像检测算法的实现}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}代码移植的程序框架设计}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces 框架类、检测类及其子类}}{12}}
+\newlabel{class}{{7}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}本章小结}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}并行化设计的整体实现与测试}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}OpenCV和CUDA环境搭建}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}软硬件环境}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2}Cmake重新编译OpenCV}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.3}Visual Studio 2013下对项目的配置方法}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}多线程优化的性能测试}{15}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 多线程下检测算法的性能测试}}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}在GPU下的图像检测算法性能测试}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}OpenCV中的CUDA模块存在的问题}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}多线程条件下GPU函数的执行情况}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}本章小结}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}总结与展望}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}论文工作总结}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}下一步研究内容}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}本章小结}{16}}
 \bibcite{chinamake2025-url}{1}
 \bibcite{yi}{2}
 \bibcite{lv}{3}

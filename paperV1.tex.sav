@@ -3,15 +3,15 @@
 \usepackage{times}                       % 使用 Times New Roman 字体
 \usepackage{CJK,CJKnumb,CJKulem}         % 中文支持宏包
 \usepackage{color}                       % 支持彩色
-\usepackage{cite}                        %参考文献交叉引用
-\usepackage{indentfirst}                 %支持首行缩进
+\usepackage{cite}
+\usepackage{indentfirst}
 
 %——————————–其他宏包——————————–
 \usepackage{amsmath,amsthm,amsfonts,amssymb,bm} % 数学宏包
 \usepackage{graphicx,psfrag}                    % 图形宏包
+%\usepackage{graphicx}                    % 图形宏包
 \usepackage{makeidx}                            % 建立索引宏包
 \usepackage{listings}                           % 源代码宏包
-\usepackage{booktabs}                           % 绘制表格
 
 %%%% 段落首行缩进两个字 %%%%
 \makeatletter
@@ -60,6 +60,7 @@
 
 %%%% 下面的命令设置行间距与段落间距 %%%%
 \linespread{1.4}
+% \setlength{\parskip}{1ex}
 \setlength{\parskip}{0\baselineskip}
 
 %%%% 下面的命令设置参考文献作为上标引用 %%%%
@@ -135,7 +136,7 @@
 
 \subsection{论文主要内容}
 
-1.手机屏幕缺陷检测系统概况；
+1.手机屏幕缺陷检测系统概况
 
 2.关于利用GPU计算加速算法的调研；
 
@@ -145,16 +146,8 @@
 
 5.CUDA函数在CPU多线程代码中的运行状态；
 \subsection{论文组织框架}
-第一章和第二章主要概述论文所研究的问题，包括其研究背景调研，所处的项目背景和实际意义。
-并介绍解决问题的程序设计方案，包括多线程的设计，GPU通用计算的使用。
+blank
 
-第三章主要介绍如何借助OpenCV的CUDA模块来对算法进行移植，利用GPU设备的计算性能
-对算法进行优化。
-
-第四章介绍研究工作的展开和具体实现，包括开发环境的部署和配置，局部和整体的性能测试，
-以及探讨工作中出现的问题。
-
-第五章则总结了本论文的研究工作，提出存在的问题和待研究的方向。
 
 \section{项目需求和整体解决方案}
 \subsection{项目概况}
@@ -171,29 +164,7 @@
 
 \subsubsection{图像采集和输入}
 
-在智能手机的自动化生产线上，手机液晶屏所在的工位一次装载两个手机屏幕（不包含其它手机零部件）。
-相机照明分自发光（液晶屏接通电源发光）和外光源（开启工位上的条形光源）两种。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.8\linewidth]{img/self.jpg}
-\caption{自发光条件下拍摄的图片}
-\label{self}
-\end{figure}
-
-\begin{figure}[]
-\centering
-\includegraphics[width=0.8\linewidth]{img/ext.jpg}
-\caption{外光源条件下拍摄的图片}
-\label{ext}
-\end{figure}
-
-工位相机在两种不同的照明条件下各拍摄一次，然后使用真空泵覆一层膜再拍摄一次。
-两次拍摄的图像作为一组输入，输入的图像经过分离，左右两个样品分别进行一次检测。
-也就是说，现场检测一个工位的产品，要调用四次检测算法。为了提高处理速度，使用多线程来处理是必须的。
-
-其中，自发光图片比起外光源图片具有更好的辨识度，因此在图像分离步骤中使用自发光图片
-来提取有效区域掩模版。
+在智能手机的自动化生产线上，手机液晶屏所在的工位一次装载两个手机屏幕，
 
 \begin{figure}[htbp]
 \centering
@@ -205,46 +176,25 @@
 \begin{minipage}[t]{0.4\textwidth}
 \centering
 \includegraphics[width=0.8\linewidth]{img/mask.jpg}
-\caption{有效区域的掩模版}
+\caption{单张图像的掩模版}
 \end{minipage}
 \end{figure}
 
 \subsubsection{图像检测}
 
-检测对象主要位屏幕表面的污点和划痕，主要采用了基于边缘检测的方法（借助Canny边缘检测算法实现）；
-检测结果使用矩形框保存。对矩形框进行描边之后生成可视化的结果图像如图~\ref{result}所示。因为所使用样本
-表面较脏，所以检测出的缺陷数量比较多，也更醒目。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.6\linewidth]{img/result.jpg}
-\caption{图像检测结果}
-\label{result}
-\end{figure}
-
-\clearpage
-
 \subsection{多线程加速设计方案}
-
 \subsubsection{图像处理过程中的线程分配}
 输入的图片一共四张，分覆膜和不覆膜各一组，分别开启一个线程来处理。
 
-同一组样片在两种不同光照条件下拍摄的两张图像输入后，先把大图分离成左右两个小图，产生四个小图；
-因为这里暂时不需要检测外光源情况下的图，所以开启两个线程针对自发光情况来调用检测算法，而不是四个线程。
+同一组样片在两种不同光照条件下拍摄的两张图像输入后，先把大图分离成左右两个小图，产生四个小图；因为这里暂时不需要检测外光源情况下的图，所以开启两个线程针对自发光情况来调用检测算法，而不是四个线程。
 
 \subsubsection{OpenMP的应用}
 程序中大量使用for循环来对图像中的单个像素逐个处理。\\
 note:OpenMP从多指令并发来实现循环语句的并行执行，因此每个循环操作之间要保持低耦合才会适用。\\
 note:OpenMP的循环计数不支持unsigned（无符号整型）类型的变量；因此不能使用size\_t类型来作为循环计数。
 部分程序代码中使用size\_t类型的变量来代替int类型，是出于跨平台的考虑\\
-待完善
-
 \subsection{GPU通用计算的应用}
 
-\subsection{CUDA简介}
-blank
-
-\subsection{在OpenCV中调用GPU的方法}
 OpenCV中的CUDA模块（或者说GPU模块）的使用一般分为这样几个步骤：\\
 \indent 1.支持CUDA的设备初始化；                                \\
 \indent 2.上传待处理数据到GPU（从Mat容器到GpuMat容器）；         \\
@@ -264,32 +214,10 @@ OpenCV中的CUDA模块（或者说GPU模块）的使用一般分为这样几个步骤：\\
 覆盖父类的方法，同时其余继承自父类的方法没有变化。这样在移植过程中可以循序渐
 进，也方便测试性能变化。
 
-
-\subsection{本章小结}
+\subsubsection{blank}
 blank
 
 \section{GPU图像检测算法的实现}
-\subsection{代码移植的程序框架设计}
-原代码包含了两个类：框架类（BGBFrame）和检测类（BGBInspector）。框架类包含了一部分图片预处理
-流程，主要有：加权平均降噪、图片分离（将左右两个样片分割成小图）。检测类包含了预处理、后处理
-（记录缺陷形成可视化的检测结果图）和核心的缺陷检测方法Inspect()。而框架类在图像检测部分，通
-过实例化一个检测类来进行检测。
-
-为了方便代码的移植和测试，这里使用一个检测类的子类来一些子函数的GPU实现。完成一个GPU函数的编写
-后，可直接在子类中调用，取代原有的函数，而其它没有变更的函数则沿用父类的方法。
-
-在这之后，可以在框架类内部选择实例化检测类或者其子类来决定是否调用GPU计算，能比较直接的进行CPU
-和GPU的性能对比实验；同样的，在后续开发过程中，是否调用GPU的逻辑控制也变得简单了。
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.8\linewidth]{img/class.jpg}
-\caption{框架类、检测类及其子类}
-\label{class}
-\end{figure}
-
-\subsection{本章小结}
-blank
-
 \section{并行化设计的整体实现与测试}
 
 \subsection{OpenCV和CUDA环境搭建}
@@ -328,7 +256,7 @@ blank
 7.进入OpenCV的工程生成目录，将install整个文件夹拷贝至opencv安装目录下，将现有的build文件夹改为build.old，将install文件夹改为build，这样就可以把原来的库替代为编译好的带有CUDA模块的OpenCV库。
 \subsubsection{Visual Studio 2013下对项目的配置方法}
 
-为了正常使用OpenCV及编译好的CUDA模块，需要在工程的配置管理器（Property Manager）进行配置，配置步骤如下（不分先后）：
+为了正常使用OpenCV及编译好的CUDA模块，需要在工程的配置管理器(Property Manager)进行配置，配置步骤如下（不分先后）：
 
 1.在VC++ Directories选项下，在包含目录(Include Directories)填入：\\
 \indent F:/Program Files/opencv/build/include       \\
@@ -338,7 +266,7 @@ blank
 2.在库目录(Library Directories)填入：\\
 \indent F:/Program Files/opencv/build/x64/vc12/lib
 
-3.在链接器（Linker）选项下选择输入（input），在附加依赖项（Additional Dependencies）填入：\\
+3.在链接器(Linker)选项下选择输入(input)，在Additional Dependencies填入：\\
 \indent   opencv\_calib3d320d.lib\\
 \indent   opencv\_core320d.lib\\
 \indent   opencv\_cudaarithm320d.lib\\
@@ -372,46 +300,20 @@ blank
 执行第3步时把以上所有库文件名复制一次，再去掉后缀“d”之后即release下编译的库文件名。
 
 \subsection{多线程优化的性能测试}
-输入的图片分覆膜和不覆膜两组，每组输入自发光和外光源各一张图像，图片分离后左右两个样片各开一个线程进行检测；也就是
-说，同一时间的最大线程数为4。以下测试从单线程处理开始测试，每增加一个线程意味着增加一次图片检测过程。
-
-\begin{table}[htbp] 
-\centering
-\caption{多线程下检测算法的性能测试}
-\begin{tabular}{cccc}
-\toprule
-图片大小&分辨率&线程数&时间开销\\
-\midrule
-5&3&2&1\\
-1&8&2&1\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
 \subsection{在GPU下的图像检测算法性能测试}
 插入代码片段
-\clearpage
 
 \begin{lstlisting}[ language=C]
 int main(int argc, char ** argv)
 {
+
 printf("Hello,world!\n");
+
 return 0;
 }
 \end{lstlisting}
 
-
-
-\subsubsection{OpenCV中的CUDA模块存在的问题}
-note:CUDA模块的GPU函数在特定情况下存在性能低下的问题%待完善
-
 \subsection{多线程条件下GPU函数的执行情况}
-在CPU多线程下调用GPU函数，程序同时在不同的设备上运行。执行普通代码是在CPU上；执行GPU函数则是在
-GPU上进行计算，计算结果再从GPU反馈到CPU。因为在CPU-GPU异构平台上运行，程序的稳定性和性能都是未知的，
-因此很有必要进行测试。
-
-\subsection{本章小结}
 
 \section{总结与展望}
 \subsection{论文工作总结}
