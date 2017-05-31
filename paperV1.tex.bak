@@ -5,20 +5,28 @@
 \usepackage{color}                       % 支持彩色
 \usepackage{cite}                        %参考文献交叉引用
 \usepackage{indentfirst}                 %支持首行缩进
-
+\usepackage{ifthen}
 %——————————–其他宏包——————————–
 \usepackage{amsmath,amsthm,amsfonts,amssymb,bm} % 数学宏包
 \usepackage{graphicx,psfrag}                    % 图形宏包
+\usepackage{float}
 \usepackage{makeidx}                            % 建立索引宏包
 \usepackage{listings}                           % 源代码宏包
 \usepackage{booktabs}                           % 绘制表格
 
-%%%% 段落首行缩进两个字 %%%%
-\makeatletter
-\let\@afterindentfalse\@afterindenttrue
-\@afterindenttrue
-\makeatother
-\setlength{\parindent}{2em}  %中文缩进两个汉字位
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\usepackage{titletoc,titlesec}
+
+\usepackage{fancyhdr}                           % 修改目录,设置页眉页脚
+\usepackage{lastpage}
+\usepackage{layout}
+
+\usepackage{caption}                            % 修改图表标题
+\usepackage{setspace}                           % 修改行距
+
+%\titleformat{\section}[block]{\color{blue}\Large\bfseries\filcenter}{}{1em}{}
+%\titleformat{\subsection}[hang]{\bfseries}{}{1em}{}
+%\setcounter{secnumdepth}{0}
 
 %%%%%% 设置字号 %%%%%%
 \newcommand{\chuhao}{\fontsize{42pt}{\baselineskip}\selectfont}
@@ -26,7 +34,8 @@
 \newcommand{\yihao}{\fontsize{28pt}{\baselineskip}\selectfont}
 \newcommand{\erhao}{\fontsize{21pt}{\baselineskip}\selectfont}
 \newcommand{\xiaoerhao}{\fontsize{18pt}{\baselineskip}\selectfont}
-\newcommand{\sanhao}{\fontsize{15.75pt}{\baselineskip}\selectfont}
+\newcommand{\sanhao}{\fontsize{16pt}{\baselineskip}\selectfont}
+\newcommand{\xiaosanhao}{\fontsize{15pt}{\baselineskip}\selectfont}
 \newcommand{\sihao}{\fontsize{14pt}{\baselineskip}\selectfont}
 \newcommand{\xiaosihao}{\fontsize{12pt}{\baselineskip}\selectfont}
 \newcommand{\wuhao}{\fontsize{10.5pt}{\baselineskip}\selectfont}
@@ -34,41 +43,92 @@
 \newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
 \newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}
 
-%%%% 设置 section 属性 %%%%
-\makeatletter
-\renewcommand\section{\@startsection{section}{1}{\z@}%
-{-1.5ex \@plus -.5ex \@minus -.2ex}%
-{.5ex \@plus .1ex}%
-{\normalfont\sihao\CJKfamily{hei}}}
-\makeatother
-
-%%%% 设置 subsection 属性 %%%%
-\makeatletter
-\renewcommand\subsection{\@startsection{subsection}{1}{\z@}%
-{-1.25ex \@plus -.5ex \@minus -.2ex}%
-{.4ex \@plus .1ex}%
-{\normalfont\xiaosihao\CJKfamily{hei}}}
-\makeatother
-
-%%%% 设置 subsubsection 属性 %%%%
-\makeatletter
-\renewcommand\subsubsection{\@startsection{subsubsection}{1}{\z@}%
-{-1ex \@plus -.5ex \@minus -.2ex}%
-{.3ex \@plus .1ex}%
-{\normalfont\xiaosihao\CJKfamily{hei}}}
-\makeatother
+%%%%%% 支持表格内换行 %%%%%%
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 
 %%%% 下面的命令设置行间距与段落间距 %%%%
-\linespread{1.4}
+\linespread{1.2}
 \setlength{\parskip}{0\baselineskip}
+\topmargin=-1in % 消除页眉-边界距离初始值
+\headheight=5.5mm % 该设定使得效果与官方doc模板相似
+\textheight=242mm % 297-30-25
+\footskip=7.5mm
+\setlength\voffset{2cm} % 规范：页眉距边界2.0cm, one inch + \voffset + \topmargin = 2cm.
+% 规范：上装订线边距3cm，即上边距到正文3cm。
+% 需要 1 inch + \voffset + \topmargin + \headheight + \headsep = 3.0cm
+\headsep= 4.5mm
+%\pagenumbering{Roman}
+\xiaosihao
+\setlength{\parindent}{2em}
+
+\setcounter{secnumdepth}{3}           %默认的章节编号计数层次，对section，subsection和subsubsection计数
+
+%%%% 设置 section 属性 %%%%
+% 跨章节的图、表、公式计数清零
+\titleformat{\section}[block]{}{\thesection}{1em}{\setcounter{figure}{0}\setcounter{table}{0}\setcounter{equation}{0}}
+\titleformat*{\section}{\centering\sanhao\CJKfamily{song}}
+\titlespacing*{\section}{0em}{0\baselineskip}{1\baselineskip}
+
+%%%% 设置 subsection 属性 %%%%
+\titleformat{\subsection}[hang]{}{\thesubsection}{1em}{}
+\titleformat*{\subsection}{\normalfont\xiaosanhao\CJKfamily{song}}
+\titlespacing*{\subsection}{0em}{1\baselineskip}{0.5\baselineskip}
+
+%%%% 设置 subsubsection 属性 %%%%
+\titleformat{\subsubsection}{\sihao}{\thesubsubsection}{1em}{}
+\titlespacing{\subsubsection}{2em}{0.5\baselineskip}{0\baselineskip}
+
+%%%%%%设置目录样式%%%%%%%%%%%%%
+\makeatletter
+%\renewcommand\l@subsection{\@dottedtocline{2}{1.5em}{3em}}
+\renewcommand{\l@section}{\@dottedtocline{1}{0em}{1.5em}}
+\makeatother
+%
+\titlecontents{section}[0em]{}{\thecontentslabel\quad}{}{\dotfill\contentspage[{\makebox[0pt][r]{\thecontentspage}}]}
+\titlecontents{subsection}[1em]{}{\thecontentslabel\quad}{}{\dotfill\contentspage[{\makebox[0pt][r]{\thecontentspage}}]}
+\titlecontents{subsubsection}[2em]{}{\thecontentslabel\quad}{}{\dotfill\contentspage[{\makebox[0pt][r]{\thecontentspage}}]}
+
 
 %%%% 下面的命令设置参考文献作为上标引用 %%%%
 \makeatletter
 \def\@cite#1#2{\textsuperscript{[{#1\if@tempswa , #2\fi}]}}
 \makeatother
+
+%%%%%设置图表序号格式%%%%%%%%%
+\captionsetup[table]{labelsep=space}      %图表序号的冒号改为空格
+\captionsetup[figure]{labelsep=space}      %图表序号的冒号改为空格
+
+%图、表、公式的序号与章节相关（1-1，1-2，2-1...）
+\makeatletter
+\renewcommand{\thefigure}{\ifnum \c@section>\z@ \thesection-\fi \@arabic\c@figure}
+\renewcommand{\thetable}{\ifnum \c@section>\z@ \thesection-\fi \@arabic\c@table}
+\renewcommand\theequation{\ifnum \c@chapter >\z@ \thesection-\fi
+\@arabic \c@equation}
+\makeatother
+
+
+
 %—————————————————————————————————正文—————————————————————————————–
 \begin{document} % 开始正文
 \begin{CJK*}{GBK}{song}                           % 开始中文环境
+
+%%%%%页眉页脚设置%%%%%%%%%%%%%%%%%%%
+% booktabs parameters
+\setlength\cmidrulewidth {1.0pt}
+\setlength\lightrulewidth{1.0pt}
+\setlength\heavyrulewidth{1.5pt}
+\setboolean{@twoside}{true}              %设置双页
+%\ifodd\value{page}
+\pagestyle{fancy}{%
+\fancyhf{}
+\fancyhead[CO]{\wuhao \leftmark}
+\fancyhead[CE]{\wuhao{西安交通大学本科毕业设计（论文）} }
+\fancyfoot[RO,LE]{\xiaowuhao ~\thepage~}
+\renewcommand{\headrulewidth}{\if@mainmatter 0.5pt\else 0pt \fi}
+\renewcommand{\headrule}{\hrule \@height \headrulewidth \@width \headwidth \vskip .5pt
+\hrule \@height \headrulewidth \@width \headwidth \vskip -\headrulewidth}
+}
+%\fi
 
 %%%% 定理类环境的定义 %%%%
 \newtheorem{example}{例}             % 整体编号
@@ -86,24 +146,79 @@
 \newtheorem{assumption}{假设}
 
 %%%% 重定义 %%%%
-\renewcommand{\contentsname}{目录}  % 将Contents改为目录
-\renewcommand{\abstractname}{摘要}  % 将Abstract改为摘要
-\renewcommand{\refname}{参考文献}   % 将References改为参考文献
+\renewcommand{\contentsname}{\hspace*{\fill}目\quad 录\hspace*{\fill}}  %将Contents改为目录
+
+\renewcommand{\abstractname}{\normalfont\sanhao{摘~~要}}%
+
+\renewcommand{\refname}{参考文献}   % 将References 改为参考文献
 \renewcommand{\indexname}{索引}
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 \renewcommand{\appendixname}{附录}
 \renewcommand{\algorithm}{算法}
 
+\pagenumbering{Roman}                          %绪论之前的部分用罗马数字表示页码
 
-\author{张志源\\[2ex]\xiaosihao （西安交通大学~电信学院~计算机33，陕西~西安）\\[2ex]}        % 作者
-\date{2017年5月}
+%~
+%\clearpage
+%~
+%\clearpage
+%~
+%\clearpage
+%\author{张志源\\[2ex]\xiaosihao （西安交通大学~电信学院~计算机33，陕西~ 西安）\\[2ex]}        % 作者
+%\date{2017年5月}
 
-\title{CPU-GPU异构平台上平面光源检测方法的并行化设计与实现}                                % 题目
-\maketitle                                       % 生成标题
+%\title{CPU-GPU异构平台上平面光源检测方法的并行化设计与实现}                                % 题目
+\fancyhead[C]{\wuhao{摘\quad 要} }
+\noindent
+\textbf{论文题目：CPU-GPU异构平台上平面光源检测方法的并行化设计与实现}\\
+\textbf{学生姓名：张志源}\\
+\textbf{指导教师：吴茜媛}
+\section*{摘\quad 要}
+\sectionmark{摘\quad 要}
+%\begin{center}
+%\sanhao
+%摘\quad 要
+%\end{center}
+\noindent
+（这里放置abstract的文字）\\\\
+\wuhao\noindent{\bf 关键词}：
+
+
+%\maketitle                                       % 生成标题
 
 \clearpage % 换页，\newpage也可以，推荐\clearpage
 
+\fancyhead[C]{\wuhao{ABSTRACT} }
+\renewcommand{\abstractname}{\normalfont\sanhao{ABSTRACT}}%
+\noindent
+\textbf{Title: XXXXXXXXXXXXXXXXX（论文题目不能超过35 个汉字）}\\
+\textbf{name:XXX}\\
+\textbf{Supervisor: XXX}
+\section*{ABSTRACT}
+\sectionmark{ABSTRACT}
+\noindent
+（这里放置abstract的文字）\\\\
+\wuhao\noindent{\bf KEY~WORDS}：
+
+\clearpage % 换页
+%%%%%页眉页脚设置%%%%%%%%%%%%%%%%%%%
+% booktabs parameters
+\setlength\cmidrulewidth {1.0pt}
+\setlength\lightrulewidth{1.0pt}
+\setlength\heavyrulewidth{1.5pt}
+\setboolean{@twoside}{true}              %设置双页
+%\ifodd\value{page}
+\pagestyle{fancy}{%
+\fancyhf{}
+\fancyhead[CO]{\wuhao \leftmark}
+\fancyhead[CE]{\wuhao{西安交通大学本科毕业设计（论文）} }
+\fancyfoot[RO,LE]{\xiaowuhao ~\thepage~}
+\renewcommand{\headrulewidth}{\if@mainmatter 0.5pt\else 0pt \fi}
+\renewcommand{\headrule}{\hrule \@height \headrulewidth \@width \headwidth \vskip .5pt
+\hrule \@height \headrulewidth \@width \headwidth \vskip -\headrulewidth}
+}
+%\fi
 \tableofcontents                             %生成目录
 
 \clearpage % 换页，\newpage也可以，推荐\clearpage
@@ -113,89 +228,111 @@
 %\paragraph{}
 %无
 
+\pagenumbering{arabic}           %绪论开始的正文使用阿拉伯数字表示页码
+
 \section{绪论}
+
 \subsection{背景与意义}
 
 智能制造是当前中国产业变革的主攻方向，2015年首次提出的“中国制造2025”，是中国政府实施制造强国战略第一个十年的行动纲领，旨在发展高技术含量的制造行业，改变中国制造业“大而不强”的局面\cite{chinamake2025-url}。而智能检测是智能制造中的关键环节之一；能否满足智能检测中的实时性要求，直接影响了智能制造流水线中的生产效率。
 
-在智能手机的生产线上，在手机液晶屏幕的质量检测这一环节，缺少直接有效的方法来实现自动化，因此只能安排专人来把关\cite{yi}。笔者所参与的项目，主要的工作是使用基于图像识别的方法，在生产线上实现自动化设备来检测手机屏幕缺陷，以此代替传统人工检测。
+在智能手机的生产线上，在手机液晶屏幕的质量检测这一环节，缺少直接有效的方法来实现自动化，因此只能安排专人来把关，人工来检测产品缺陷\cite{yi}。笔者所参与的项目，主要的工作是使用基于图像识别的方法，在生产线上实现自动化设备来检测手机屏幕缺陷，以此代替传统人工检测，减少不必要的人力资源开销，并提高生产效率。
 
 为了满足实时性的要求，最根本的途径是提高检测算法的执行速度，这也是笔者的主要工作和研究重点；如果算法的时间开销过大，检测系统将难以和现场的生产设备对接。如何提高检测环节中复杂算法的执行效率，就是一个的亟待解决、且有广泛应用价值的问题。
 
 \subsection{研究现状}
 
-在有限的计算资源下，利用并行计算是提高算法执行效率的最直接的方法。在该项目下，对同一组手机屏幕的一次检测中需要拍摄多张图片，也就意味着要在短时间内对多张图片执行相同的检测算法，在这个地方可以利用多核CPU的多线程并发，对每张图片分配一个线程执行算法。
+在有限的计算资源下，利用并行计算是提高算法执行效率的最直接的方法。在该项目下，对同一组手机屏幕的一次检测中需要拍摄多张图片，也就意味着要在短时间内对多张图片执行相同的检测算法，在这个地方可以利用多核CPU 的多线程并发，对每张图片分配一个线程执行算法。
 
-如果深入到处理器的计算性能，在大规模并行计算领域，GPU和CPU相比，展现了更强大的浮点运算能力。GPU 的可编程性在未开始发展时，开发人员要借助复杂的计算机图形学API来对GPU进行编程，这对非专业人员造成极大的困难\cite{lv}。而近年来，GPU在计算性能不断提高的同时，它的可编程性也在不断提高，意味着GPU可以在通用计算领域得到更广泛的应用；像这一类的GPU被称为通用GPU，即GPGPU（General Purpose GPU）\cite{wang}。目前应用较广泛的GPGPU 平台主要有CUDA（Compute Unified Device Architecture，统一计算设备架构）、OpenCL （Open Graphics Library，开放计算语言）。CUDA是显卡厂商NVIDIA推出的、基于自家公司生产的GPU开发出来的，使用C语言来设计需要的程序，对所进行的计算进行分配和管理\cite{lv}。
+如果深入到处理器的计算性能，在大规模并行计算领域，GPU 和CPU 相比，展现了更强大的浮点运算能力。GPU 的可编程性在未开始发展时，开发人员要借助复杂的计算机图形学API来对GPU进行编程，这对非专业人员造成极大的困难\cite{lv}。 而近年来，GPU在计算性能不断提高的同时，它的可编程性也在不断提高，意味着GPU可以在通用计算领域得到更广泛的应用；像这一类的GPU被称为通用GPU，即GPGPU（General Purpose GPU）\cite{wang}。目前应用较广泛的GPGPU 平台主要有CUDA （Compute Unified Device Architecture，统一计算设备架构）、OpenCL （Open Graphics Library，开放计算语言）。CUDA是显卡厂商NVIDIA推出的、基于自家公司生产的GPU 开发出来的，使用C 语言来设计需要的程序，对所进行的计算进行分配和管理\cite{lv}。
 
 借助CUDA的架构来对算法进行移植是目前常用的解决性能问题的方法。问题在于，对现有图像处理算法进行移植和优化仍然需要比较强的专业和理论基础，如果只是针对特定算法倒是可行，但是要用上述方法对该项目的检测算法进行移植，涉及到复杂的处理流程，移植算法需要很长的学习和研发周期。
-考虑到易用性和友好程度，这里着重关注OpenCV（Open Source Computer Vision Library）的GPU模块；这个模块最早在NVIDIA公司支持下进行开发，并于2011年春正式发行\cite{wang}。目前为止也更新了大量由CUDA代码编写的图形处理算法，这也就意味着开发人员可以使用这些通用的算法API来利用GPU进行计算，免去了繁杂的算法设计和优化。由于OpenCV的开源特性，专家和爱好者可以共同维护和开发OpenCV的GPU模块，并不断完善，在图形处理方面有着良好的发展前景。
+考虑到易用性和友好程度，这里着重关注OpenCV（Open Source Computer Vision Library）的GPU模块；这个模块最早在NVIDIA 公司支持下进行开发，并于2011 年春正式发行\cite{opencv-url}。目前为止也更新了大量由CUDA 代码编写的图形处理算法，这也就意味着开发人员可以使用这些通用的算法API来利用GPU 进行计算，免去了繁杂的算法设计和优化。由于OpenCV 的开源特性，专家和爱好者可以共同维护和开发OpenCV的GPU模块，并不断完善，在图形处理方面有着良好的发展前景。
 
-本次毕设的主要工作就是在CPU-GPU异构平台上，利用CUDA架构对原有的算法进行移植，利用GPU进行加速，并尝试与CPU多核多线程并行结合，探索其性能提高的方法。
+本次毕设的主要工作就是在CPU-GPU异构平台上，利用CUDA 架构对原有的算法进行移植，利用GPU进行加速，并尝试与CPU多核多线程并行结合，探索其性能提高的方法。
 
 \subsection{论文主要内容}
 
-1.手机屏幕缺陷检测系统概况
+1.手机屏幕缺陷检测系统概况：介绍毕设工作所处的项目背景，阐述项目所要解决的问题，项目的主要工作流程，
+以及与笔者的工作重点的联系。
 
-2.关于利用GPU计算加速算法的调研；
+2.关于利用GPU计算加速算法的调研：介绍NVIDIA公司推出的CUDA架构，以及OpenCV的CUDA模块在GPU计算中的应用，
+主要目的是为了利用GPU的高并行计算来解决图像处理过程中的计算瓶颈；并对OpenCV中CUDA模块的滤波函数进行
+了初步的性能测试。
 
-3.CPU多线程的优化方案和OpenMP的应用；
+3.CPU多线程并行的优化方案和OpenMP的应用：介绍在该项目中如何利用多线程来对检测算法进行整体的优化，以及使用OpenMP
+对局部代码进行并行优化，探讨其中发现的问题。
 
-4.利用OpenCV的CUDA模块进行算法移植和测试；
+4.利用OpenCV的CUDA模块进行算法移植和测试：介绍笔者针对该项目的算法、借助OpenCV中CUDA模块的API对原有代码进行
+改写，调用GPU来进行一些图像处理的计算，并对移植后的算法进行性能的测试和分析。
 
-5.CUDA函数在CPU多线程代码中的运行状态；
+5.CUDA函数在CPU多线程代码中的运行状态：在之前算法移植的工作基础上，研究移植后的代码在CPU多线程条件下的
+运行状态。
+
+6.毕设工作总结：总结毕设工作，研究工作中存在的问题，介绍其它可行的解决方案和下一步的工作。
+
 \subsection{论文组织框架}
-第一章和第二章主要概述论文所研究的问题，包括其研究背景调研，所处的项目背景和实际意义。
-并介绍解决问题的程序设计方案，包括多线程的设计，GPU通用计算的使用。
+第一章为绪论部分，主要概述论文所研究的问题和实际意义，包括研究背景调研和笔者采用的解决方案。
 
-第三章主要介绍如何借助OpenCV的CUDA模块来对算法进行移植，利用GPU设备的计算性能
-对算法进行优化。
+第二章主要介绍笔者的研究所处的项目背景和笔者的主要工作，解决问题的程序设计方案，包括多线程的设计，GPU 通用计算的使用。
+
+第三章对第二章提到的解决方案的实施进行详细的说明，包括程序总体框架的设计、程序中具体线程的分配，和OpenCV中CUDA模块的具体
+应用；
 
 第四章介绍研究工作的展开和具体实现，包括开发环境的部署和配置，局部和整体的性能测试，
-以及探讨工作中出现的问题。
+以及探讨工作中出现的问题；
 
 第五章则总结了本论文的研究工作，提出存在的问题和待研究的方向。
 
+\clearpage
+
 \section{项目需求和整体解决方案}
+
 \subsection{项目概况}
-手机屏幕缺陷检测系统的抽象工作流程如图~\ref{frame}所示。程序启动到读取算法参数属于初始化的过程，
-系统从图像采集开始进入流水工作。
+手机屏幕缺陷检测系统的抽象工作流程如图~\ref{frame} 所示。程序启动到读取算法参数属于初始化的过程，
+系统从图像采集开始进入正常的流水工作。图像采集使用高精度的相机进行拍摄，使其能够捕捉到手机液晶屏
+表面沾染的微小污点；拍摄完毕后进行图像的检测，图像的输入格式为BMP（Bitmap，Windows标准图像文件格式），
+经过分离和平滑等预处理后，执行缺陷检测；把检测到的缺陷个数返回作为检测结果，同时保存结果图像。一般情况下
+，只要存在任何缺陷就可以判定产品不合格。
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{img/frame.jpg}
+\includegraphics[width=0.35\linewidth]{img/frame.jpg}
 \caption{手机屏幕缺陷检测整体流程}
 \label{frame}
 \end{figure}
 
 \subsubsection{读取算法参数}
+使用配置文件来保存程序中会用到的各种变量，包括输入图像的分辨率、有效区域范围等等，配置文件的书写格式
+如下：
+
+部分的算法参数说明如下：
 
 \subsubsection{图像采集和输入}
 
-在智能手机的自动化生产线上，手机液晶屏所在的工位一次装载两个手机屏幕。相机照明分自发光（液晶屏接通电源发光）
-和外光源（开启工位上的条形光源）两种。
+在智能手机的自动化生产线上，手机液晶屏所在的工位一次装载两个手机屏幕（不包含其它手机零部件）。
+相机照明分自发光（液晶屏接通电源发光）和外光源（开启工位上的条形光源）两种。我们所看到的输入图像的
+有效区域其实就是屏幕所在的矩形区域。而自发光图片比起外光源图片具有更好的辨识度，因此在图像分离步骤
+中使用自发光图片来提取有效区域掩模版。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{img/self.jpg}
+\includegraphics[width=0.7\linewidth]{img/self.jpg}
 \caption{自发光条件下拍摄的图片}
 \label{self}
 \end{figure}
-
-\begin{figure}[]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{img/ext.jpg}
+\includegraphics[width=0.7\linewidth]{img/ext.jpg}
 \caption{外光源条件下拍摄的图片}
 \label{ext}
 \end{figure}
 
 工位相机在两种不同的照明条件下各拍摄一次，然后使用真空泵覆一层膜再拍摄一次。
 两次拍摄的图像作为一组输入，输入的图像经过分离，左右两个样品分别进行一次检测。
-也就是说，现场检测一个工位的产品，要调用四次检测算法。为了提高处理速度，使用多线程来处理是必须的。
+也就是说，现场检测一个工位的产品，至少要调用四次检测算法。为了提高处理速度，
+使用多线程来处理是必须的。
 
-其中，自发光图片比起外光源图片具有更好的辨识度，因此在图像分离步骤中使用自发光图片
-来提取有效区域掩模版。
-
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{minipage}[t]{0.4\textwidth}
 \centering
@@ -212,111 +349,245 @@
 \subsubsection{图像检测}
 
 检测对象主要位屏幕表面的污点和划痕，主要采用了基于边缘检测的方法（借助Canny边缘检测算法实现）；
-检测结果使用矩形框保存。对矩形框进行描边之后生成可视化的结果图像如图~\ref{result}所示。因为所使用样本
-表面较脏，所以检测出的缺陷数量比较多，也更醒目。
+检测结果使用矩形框保存。对矩形框进行描边之后生成可视化的结果图像如图~\ref{result-left}和图~\ref{result-right}所示。因为所使
+用样本表面较脏，所以检测出的缺陷数量比较多，也更醒目。
+
+%\{figure}[htbp]
+%\centering
+%\includegraphics[width=0.3\linewidth]{img/result.jpg}
+%\caption{图像检测结果}
+%\label{result}
+%\end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\linewidth]{img/result.jpg}
-\caption{图像检测结果}
-\label{result}
+\begin{minipage}[t]{0.4\textwidth}
+\centering
+\includegraphics[width=0.8\linewidth]{img/result-left.jpg}
+\caption{图像检测结果（左）}
+\label{result-left}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\centering
+\includegraphics[width=0.8\linewidth]{img/result-right.jpg}
+\caption{图像检测结果（右）}
+\label{result-right}
+\end{minipage}
 \end{figure}
 
-\clearpage
 
-\subsection{多线程加速设计方案}
+\subsection{整体解决方案}
+blank\\
 
-\subsubsection{图像处理过程中的线程分配}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{img/design.jpg}
+\caption{整体解决方案}
+\label{design}
+\end{figure}
+
+
+\subsection{CPU多线程并行优化方案}
+
+\subsubsection{应用CPU多线程对图像处理的整体优化}
 输入的图片一共四张，分覆膜和不覆膜各一组，分别开启一个线程来处理。
-
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{img/thread.jpg}
+\caption{线程分配}
+\label{thread}
+\end{figure}
 同一组样片在两种不同光照条件下拍摄的两张图像输入后，先把大图分离成左右两个小图，产生四个小图；
 因为这里暂时不需要检测外光源情况下的图，所以开启两个线程针对自发光情况来调用检测算法，而不是四个线程。
 
-\subsubsection{OpenMP的应用}
+\subsubsection{应用 OpenMP对局部代码的并行优化}
+在Visual Studio中支持使用OpenMP的预编译指令来对一些循环代码来进行并行计算。
 程序中大量使用for循环来对图像中的单个像素逐个处理。\\
 note:OpenMP从多指令并发来实现循环语句的并行执行，因此每个循环操作之间要保持低耦合才会适用。\\
 note:OpenMP的循环计数不支持unsigned（无符号整型）类型的变量；因此不能使用size\_t类型来作为循环计数。
-部分程序代码中使用size\_t类型的变量来代替int类型，是出于跨平台的考虑\\
-\subsection{GPU通用计算的应用}
+部分程序代码中使用size\_t类型的变量来代替int类型，是出于跨平台的考虑。\\
+待完善
 
+\subsection{使用GPU通用计算优化算法}
+
+\subsubsection{CUDA简介和CUDA应用方案的选择}
+blank
+
+\subsubsection{在OpenCV中调用GPU的方法}
 OpenCV中的CUDA模块（或者说GPU模块）的使用一般分为这样几个步骤：\\
 \indent 1.支持CUDA的设备初始化；                                \\
 \indent 2.上传待处理数据到GPU（从Mat容器到GpuMat容器）；         \\
 \indent 3.调用OpenCV支持的GPU的处理函数；                        \\
 \indent 4.下载处理结果到CPU（从GpuMat容器到Mat容器）\cite{wang}。
 
-    Mat类是OpenCV中用于存储矩阵和图像的容器，而GpuMat类则是对应Mat而
-设计出来，在显存上代替Mat的职能。上传是用了GpuMat自带的upload()方法，
+Mat类是OpenCV中用于存储矩阵和图像的容器，而GpuMat 类则是对应Mat 而
+设计出来，在显存上代替Mat的职能。上传是用了GpuMat 自带的upload() 方法，
 自动分配显存空间并将CPU上的Mat对象上传至显存上的GpuMat对象。而GpuMat
 的download()方法可以把显存上的GpuMat对象下载至CPU，一般的用法是下载最终
 的处理结果。因为上传和下载都是需要一定时间的，频繁上传和下载势必会影响效率；
 可以定义需要的GpuMat类型的成员变量来直接引用，避免重复的对象实例化和显存
 分配。
 
-    函数移植的方案是使用一个子类InpectorGPU来实现在GPU上运行的相关函数。
+这里使用一个代码片段，以图像的高斯滤波处理为例来作一个简要说明：
+\clearpage
+\begin{lstlisting}[ language=C]
+void gaussianBlur_GPU(Mat &src, Mat &dst, int size)
+{
+	if (getCudaEnabledDeviceCount() < 0)
+	{
+		cout << "No_Device_Enabled_For_Cuda!\n";
+		return;
+	}
+	GpuMat gsrc, gdst;
+	//registerPageLocked(src);
+	gsrc.upload(src);
+	Ptr<cuda::Filter> p = cuda::createGaussianFilter
+       (gsrc.type(), gsrc.type(), Size(size, size), 3);
+	p->apply(gsrc, gdst);
+	gdst.download(dst);
+	//unregisterPageLocked(src);
+	//imshow("dst_Gpu", dst);
+	//waitKey(0);
+}
+\end{lstlisting}
+
+
+\subsubsection{OpenCV的GPU函数性能测试}
+算法移植主要针对滤波、形态学操作等时间开销占比大的处理流程。
+这里使用OpenCV原本的高斯滤波函数和GPU模块的高斯滤波函数，来分别测试CPU和GPU的计算能力。
+
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.4\textwidth}
+\centering
+\includegraphics[width=0.9\linewidth]{img/lena-origin.jpg}
+\caption{原始图像}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\centering
+\includegraphics[width=0.9\linewidth]{img/lena-gaussian.jpg}
+\caption{高斯滤波的结果}
+\end{minipage}
+\end{figure}
+
+该测试的GPU和CPU硬件条件：NVIDIA GT750M 2G显存 DDR3独立显卡；Intel Core i5-4200M 4G内存。
+下表中BMP格式的图片即用相机采集的手机屏幕样片。
+\begin{table}[htbp]
+\centering
+\caption{CPU和GPU高斯滤波的处理速度}
+\begin{tabular}{cccccccc}
+\toprule
+\tabincell{c}{图片\\ 编号}&\tabincell{c}{图片\\ 大小}&分辨率&\tabincell{c}{上传\\ /ms}&\tabincell{c}{下载\\ /ms}&\tabincell{c}{Kernel\\ 大小}&\tabincell{c}{GPU 运算\\ /ms}&\tabincell{c}{CPU运算\\ /ms}  \\
+\midrule
+0 & 89.6KB & 512*512	& 0 & 0 & 3	& 0 & 16 \\
+1.bmp & 27.6MB &	6600*4400 &	31 & 43 & 3	&  129 & 534\\
+2.bmp & 27.6MB &	6600*4400 &	78 & 16 & 3 &  114 & 531\\
+3.bmp & 27.6MB &	6600*4400 &	31 & 36 & 3 &  125 & 531\\
+4.bmp & 27.6MB &	6600*4400 &	31 & 31 & 3 &  110 & 532\\
+5.bmp & 27.6MB &	6600*4400 &	31 & 32 & 3 &  109 & 531\\
+6.bmp & 27.6MB &	6600*4400 &	31 & 16 & 3 &  109 & 516\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+可以看出，GPU的运算总体是比CPU要快的。
+
+接下来使用不同大小的kernel来测试。高斯滤波对每个像素点在其邻域内进行加权
+平均，而kernel的大小即是这个领域范围。设kernel大小为3，表示领域为3x3大小的
+矩阵，则每个像素与其周围的紧邻的八个像素点进行加权平均。kernal越大，意味着计
+算量越大。
+
+\begin{table}[htbp]
+\centering
+\caption{不同kernal大小时CPU和GPU的高斯滤波处理速度}
+\begin{tabular}{cccccccc}
+\toprule
+\tabincell{c}{图片\\ 编号}&\tabincell{c}{图片\\ 大小}&分辨率&\tabincell{c}{上传\\ /ms}&\tabincell{c}{下载\\ /ms}&\tabincell{c}{Kernel\\ 大小}&\tabincell{c}{GPU 运算\\ /ms}&\tabincell{c}{CPU运算\\ /ms}  \\
+\midrule
+1 & 89.6KB & 512*512	& 0 & 0 & 3	& 0 & 16 \\
+1 & 27.6MB &	6600*4400 &	31 & 43 & 3	&  129 & 534\\
+1 & 27.6MB &	6600*4400 &	31 & 15 & 5 &  125 & 843\\
+1 & 27.6MB &	6600*4400 &	31 & 36 & 7 &  125 & 1687\\
+1 & 27.6MB &	6600*4400 &	31 & 31 & 9 &  141 & 2131\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kernel增大时，GPU的运算时间变化不明显，而CPU的运算时间则是随着运算量的增大而明显增大。
+
+\subsubsection{GPU加速优化的程序设计方案}
+函数移植的方案是使用一个子类InpectorGPU来实现在GPU上运行的相关函数。
 子类继承原有的检测类BGBInpector，在这个基础上来重写父类的方法；重写的方法会
 覆盖父类的方法，同时其余继承自父类的方法没有变化。这样在移植过程中可以循序渐
 进，也方便测试性能变化。
-
-\subsubsection{blank}
+\subsection{本章小结}
 blank
 
-\subsection{本章小结}
+\clearpage
+\section{CPU多线程并行和GPU加速的优化实现}   %对第二章详细说明
+\subsection{CPU多线程并行优化算法的实现}
+\subsubsection{线程类型}
+\subsubsection{线程分配}
 
-\section{GPU图像检测算法的实现}
-\subsection{代码移植的程序框架设计}
-类图
-\begin{figure}[htbp]
+\subsection{GPU加速的优化实现}
+\subsubsection{代码移植的程序框架设计}
+原代码包含了两个类：框架类（BGBFrame）和检测类（BGBInspector）。框架类包含了一部分图片预处理
+流程，主要有：加权平均降噪、图片分离（将左右两个样片分割成小图）。检测类包含了预处理、后处理
+（记录缺陷形成可视化的检测结果图）和核心的缺陷检测方法Inspect()。而框架类在图像检测部分，通
+过实例化一个检测类来进行检测。
+
+为了方便代码的移植和测试，这里使用一个检测类的子类来一些子函数的GPU实现。完成一个GPU函数的编写
+后，可直接在子类中调用，取代原有的函数，而其它没有变更的函数则沿用父类的方法。
+
+在这之后，可以在框架类内部选择实例化检测类或者其子类来决定是否调用GPU计算，能比较直接的进行CPU
+和GPU的性能对比实验；同样的，在后续开发过程中，是否调用GPU 的逻辑控制也变得简单了。
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{img/class.jpg}
+\includegraphics[width=0.6\linewidth]{img/class.jpg}
 \caption{框架类、检测类及其子类}
 \label{class}
 \end{figure}
 
+\subsubsection{关键函数代码移植示例}
 \subsection{本章小结}
 blank
+
+\clearpage
 
 \section{并行化设计的整体实现与测试}
 
 \subsection{OpenCV和CUDA环境搭建}
 
 \subsubsection{软硬件环境}
-
-1.硬件：英伟达(NVIDIA) GT750M 2G DDR3独立显卡
-
-2.库：OpenCV(Open Source Computer Vision Library)3.2.0
-
-3.编程工具：Visual Studio 2013
-
-4.Opencv编译工具：Cmake 3.6.3
-
-5.运算平台：CUDA(Compute Unified Device Architecture) 8.0
-
+\noindent
+1.硬件：英伟达(NVIDIA) GT750M 2G DDR3独立显卡\\
+2.库：OpenCV(Open Source Computer Vision Library)3.2.0\\
+3.编程工具：Visual Studio 2013\\
+4.Opencv编译工具：Cmake 3.6.3\\
+5.运算平台：CUDA(Compute Unified Device Architecture) 8.0\\
 6.操作系统：windows 10
 
 在英伟达(NVIDIA)的官网(https://developer.nvidia.com/cuda-downloads)上下载最新的CUDA 8.0并安装时，注意要选择适用于当前操作系统的版本，此过程可能会更新显卡驱动，安装后需重启。
 \subsubsection{Cmake重新编译OpenCV}
 
-可以在Cmake的图形界面下来实现OpenCV完整工程的编译，在CUDA环境搭建好的情况下，可编译出OpenCV用于GPU图形计算的CUDA模块。
+可以在Cmake的图形界面下来实现OpenCV完整工程的编译，在CUDA环境搭建好的情况下，可编译出OpenCV用于GPU 图形计算的CUDA模块。
+\noindent
+1.源代码路径选择Opencv目录下的source文件夹，并选择Opencv 工程的生成路径；\\
+2.编译工具选择Visual Studio 2013 win64；\\
+3.点击Configure，再勾选WITH\_CUDA；\\
+4.再次Configure，点击Generate生成OpenCV的工程；\\
+5.进入第一步选定的OpenCV工程的生成路径，打开OpenCV.sln，也就是打开Cmake 生成的OpenCV工程，在Visual Studio下对工程进行编译；在debug模式和release 模式下分别编译一次，大概需要2-3 个小时的时间；\\
 
-1.源代码路径选择Opencv目录下的source文件夹，并选择Opencv工程的生成路径；
+6.在工程的CMake Targets下，选择INSTALL模块右键点击Build Only Install生成OpenCV库；\\
 
-2.编译工具选择Visual Studio 2013 win64；
-
-3.点击Configure，再勾选WITH\_CUDA；
-
-4.再次Configure，点击Generate生成OpenCV的工程；
-
-5.进入第一步选定的OpenCV工程的生成路径，打开OpenCV.sln，也就是打开Cmake生成的OpenCV工程，在Visual Studio下对工程进行编译；在debug模式和release模式下分别编译一次，大概需要2-3个小时的时间；
-
-6.在工程的CMake Targets下，选择INSTALL模块右键点击Build Only Install生成OpenCV库；
-
-7.进入OpenCV的工程生成目录，将install整个文件夹拷贝至opencv安装目录下，将现有的build文件夹改为build.old，将install文件夹改为build，这样就可以把原来的库替代为编译好的带有CUDA模块的OpenCV库。
+7.进入OpenCV的工程生成目录，将install整个文件夹拷贝至opencv 安装目录下，将现有的build文件夹改为build.old，将install文件夹改为build，这样就可以把原来的库替代为编译好的带有CUDA模块的OpenCV 库。\\
 \subsubsection{Visual Studio 2013下对项目的配置方法}
 
 为了正常使用OpenCV及编译好的CUDA模块，需要在工程的配置管理器（Property Manager）进行配置，配置步骤如下（不分先后）：
-
-1.在VC++ Directories选项下，在包含目录(Include Directories)填入：\\
+\noindent
+1.在VC++ Directories选项下，在包含目录(Include Directories) 填入：\\
 \indent F:/Program Files/opencv/build/include       \\
 \indent F:/Program Files/opencv/build/include/opencv    \\
 \indent F:/Program Files/opencv/build/include/opencv2
@@ -324,73 +595,67 @@ blank
 2.在库目录(Library Directories)填入：\\
 \indent F:/Program Files/opencv/build/x64/vc12/lib
 
-3.在链接器（Linker）选项下选择输入（input），在附加依赖项（Additional Dependencies）填入：\\
-\indent   opencv\_calib3d320d.lib\\
-\indent   opencv\_core320d.lib\\
-\indent   opencv\_cudaarithm320d.lib\\
-\indent   opencv\_cudabgsegm320d.lib\\
-\indent   opencv\_cudacodec320d.lib\\
-\indent   opencv\_cudafeatures2d320d.lib\\
-\indent   opencv\_cudafilters320d.lib\\
-\indent   opencv\_cudaimgproc320d.lib\\
-\indent   opencv\_cudalegacy320d.lib\\
-\indent   opencv\_cudaobjdetect320d.lib\\
-\indent   opencv\_cudaoptflow320d.lib\\
-\indent   opencv\_cudastereo320d.lib\\
-\indent   opencv\_cudawarping320d.lib\\
-\indent   opencv\_cudev320d.lib\\
-\indent   opencv\_features2d320d.lib\\
-\indent   opencv\_flann320d.lib\\
-\indent   opencv\_highgui320d.lib\\
-\indent   opencv\_imgcodecs320d.lib\\
-\indent   opencv\_imgproc320d.lib\\
-\indent   opencv\_ml320d.lib\\
-\indent   opencv\_objdetect320d.lib\\
-\indent   opencv\_photo320d.lib\\
-\indent   opencv\_shape320d.lib\\
-\indent   opencv\_stitching320d.lib\\
-\indent   opencv\_superres320d.lib\\
-\indent   opencv\_video320d.lib\\
-\indent   opencv\_videoio320d.lib\\
-\indent   opencv\_videostab320d.lib
+3.在链接器（Linker）选项下选择输入（input），在附加依赖项（Additional Dependencies）填入如附录1
+所示的库文件名。
 
 以上是在debug下编译的配置方法，如果要在release下编译，则在release配置文件中重复以上1、2步；
-执行第3步时把以上所有库文件名复制一次，再去掉后缀“d”之后即release下编译的库文件名。
+执行第3步时把以上所有库文件名复制一次，再去掉后缀“d” 之后即release下编译的库文件名。
+
+note:关闭微软图形驱动程序的超时检测与恢复Timeout Detection and Recovery (TDR) ，
+防止GPU函数运行时被系统终止并强制重启显卡驱动（参考\cite{CUDA-gpu}）
 
 \subsection{多线程优化的性能测试}
-表格\\
-\begin{table} 
-\caption{实验数据}
-\begin{tabular}{ccc}
+输入的图片分覆膜和不覆膜两组，每组输入自发光和外光源各一张图像，图片分离后左右两个样片各开一个线程进行检测；也就是
+说，同一时间的最大线程数为4。以下测试从单线程处理开始测试，每增加一个inspector线程意味着增加一次图片检测过程。
+
+这里用一张图说明两种线程类型和关系
+图片大小：
+分辨率：
+\begin{table}[htbp]
+\centering
+\caption{多线程下检测算法的性能测试}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccc}  % 设置三线表格与文本同宽
 \toprule
-2&9&4\\
+线程数(frame)&线程数(inspector)&cpu时间/ms  \\
 \midrule
-7&5&3\\
-6&1&8\\
+1&1&4876\\
+1&2&5609\\
+2&1&5800\\
+2&2&7500\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
+待添加：整体性能分析报告
+
+图片大小和分辨率固定，可移出表格在外部说明
 
 \subsection{在GPU下的图像检测算法性能测试}
-插入代码片段
-\clearpage
-
-\begin{lstlisting}[ language=C]
-int main(int argc, char ** argv)
-{
-printf("Hello,world!\n");
-return 0;
-}
-\end{lstlisting}
-
+%插入代码片段
+%\clearpage
+%\begin{lstlisting}[ language=C]
+%int main(int argc, char ** argv)
+%{
+%printf("Hello,world!\n");
+%return 0;
+%}
+%\end{lstlisting}
 
 
-\subsubsection{OpenCV中的CUDA函数存在的问题}
+
+\subsection{OpenCV中的CUDA模块存在的问题}
+note:CUDA模块的GPU函数在特定情况下存在性能低下的问题%待完善
 
 \subsection{多线程条件下GPU函数的执行情况}
+在CPU多线程下调用GPU函数，程序同时在不同的设备上运行。执行普通代码是在CPU上；执行GPU函数则是在
+GPU上进行计算，计算结果再从GPU反馈到CPU。因为在CPU-GPU异构平台上运行，程序的稳定性和性能都是未知的，
+比较容易出现问题。
+测试数据.....
 
 \subsection{本章小结}
+
+\clearpage
 
 \section{总结与展望}
 \subsection{论文工作总结}
@@ -398,16 +663,76 @@ return 0;
 \subsection{本章小结}
 
 \clearpage % 换页
-\begin{thebibliography}{}
+
+\addcontentsline{toc}{section}{参考文献}
+\begin{thebibliography}{\centering}
 \bibitem{chinamake2025-url}国务院印发.中国制造2025[EB/OL].http://news.xinhuanet.com/politics/2015-05/19/c\_1115331338.html.
-\bibitem{yi}易松松. 基于机器视觉的手机面板缺陷检测方法研究[D]. 哈尔滨工业大学, 2016.
-\bibitem{lv}吕向阳. 基于CPU+GPU的图像处理异构并行计算研究[D]. 南昌大学, 2014.
-\bibitem{wang}王锋,杜云飞,陈娟. GPGPU性能模型研究[J].计算机工程与科学,2013,35(12):1-7.
+\bibitem{yi}易松松. 基于机器视觉的手机面板缺陷检测方法研究[D].哈尔滨工业大学, 2016.
+\bibitem{lv}吕向阳. 基于CPU+GPU的图像处理异构并行计算研究[D].南昌大学, 2014.
+\bibitem{wang}王锋,杜云飞,陈娟. GPGPU性能模型研究[J]. 计算机工程与科学,2013,35(12):1-7.
+\bibitem{liu}刘鑫,姜超,冯存永.CUDA和OpenCV图像并行处理方法研究[J].测绘科学,2012,37(4):123-125.
 \bibitem{opencv-url}OpenCV官网CUDA主页面[EB/OL].http://opencv.org/platforms/cuda.html.
 \bibitem{cppref-url}标准C++库参考文档[EB/OL].http://www.cplusplus.com/reference.
 \bibitem{CUDA-gpu}Shane Cook.CUDA Programming\_A Developer's Guide to Parallel Computing with GPUs[EB/OL].http://www.nvidia.com
 \bibitem{CUDA-guide}CUDA\_C\_Programming\_Guide[EB/OL].http://www.nvidia.com
+\bibitem{cuda-PARALLEL}G.J.Scott,G.A.Angelov,M.L.Reinig,E.C.Gaudiello and M.R.England.cv-Tile: Multilevel parallel geospatial data processing with OpenCV and CUDA[C].2015 IEEE International Geoscience and Remote Sensing Symposium (IGARSS),Milan,2015,pp.139-142
 \end{thebibliography}
+
+\clearpage
+\addcontentsline{toc}{section}{附录}
+\fancyhead[C]{\wuhao{附\quad 录} }
+\begin{center}
+\sanhao
+附\quad 录
+\end{center}
+
+附录编号依次编为附录1，附录2。附录标题各占一行，按一级标题编排。每一个附录一般应另起一页编排，
+如果有多个较短的附录，也可接排。附录中的图表公式另行编排序号，与正文分开，编号前加“附录1-”字样。
+
+\addcontentsline{toc}{subsection}{附录1}
+\noindent
+\xiaosanhao
+附录1\quad 配置OpenCV所需的库文件名
+\xiaosihao
+
+\noindent   opencv\_calib3d320d.lib\\
+\noindent   opencv\_core320d.lib\\
+\noindent   opencv\_cudaarithm320d.lib\\
+\noindent   opencv\_cudabgsegm320d.lib\\
+\noindent   opencv\_cudacodec320d.lib\\
+\noindent   opencv\_cudafeatures2d320d.lib\\
+\noindent   opencv\_cudafilters320d.lib\\
+\noindent   opencv\_cudaimgproc320d.lib\\
+\noindent   opencv\_cudalegacy320d.lib\\
+\noindent   opencv\_cudaobjdetect320d.lib\\
+\noindent   opencv\_cudaoptflow320d.lib\\
+\noindent   opencv\_cudastereo320d.lib\\
+\noindent   opencv\_cudawarping320d.lib\\
+\noindent   opencv\_cudev320d.lib\\
+
+\noindent   opencv\_features2d320d.lib\\
+\noindent   opencv\_flann320d.lib\\
+\noindent   opencv\_highgui320d.lib\\
+\noindent   opencv\_imgcodecs320d.lib\\
+\noindent   opencv\_imgproc320d.lib\\
+\noindent   opencv\_ml320d.lib\\
+\noindent   opencv\_objdetect320d.lib\\
+\noindent   opencv\_photo320d.lib\\
+\noindent   opencv\_shape320d.lib\\
+\noindent   opencv\_stitching320d.lib\\
+\noindent   opencv\_superres320d.lib\\
+\noindent   opencv\_video320d.lib\\
+\noindent   opencv\_videoio320d.lib\\
+\noindent   opencv\_videostab320d.lib
+
+\clearpage
+\addcontentsline{toc}{section}{致谢}
+\begin{center}
+\sanhao
+致\quad 谢
+\end{center}
+致谢：对于毕业设计（论文）的指导教师，对毕业设计（论文）提过有益的建议或给予过帮助的同学、同事与集体，
+都应在论文的结尾部分书面致谢，言辞应恳切、实事求是。应注明受何种基金支持（没有可不写）。
 
 \end{CJK*}     % 结束中文环境
 \end{document} % 结束正文
